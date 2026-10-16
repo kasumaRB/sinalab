@@ -64,5 +64,16 @@ export const marketAnalyses = mysqlTable("market_analyses", {
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
+export const rawEvents = mysqlTable("raw_events", {
+  id: int("id").autoincrement().primaryKey(),
+  source: varchar("source", { length: 180 }).notNull(),
+  externalId: varchar("externalId", { length: 80 }).notNull().unique(),
+  rawData: text("rawData").notNull(),
+  collectedAt: timestamp("collectedAt").defaultNow().notNull(),
+  processed: mysqlEnum("processed", ["pending", "completed", "failed"]).notNull().default("pending"),
+});
+
+export type RawEvent = typeof rawEvents.$inferSelect;
+export type InsertRawEvent = typeof rawEvents.$inferInsert;
 export type MarketEvent = typeof marketEvents.$inferSelect;
 export type InsertMarketEvent = typeof marketEvents.$inferInsert;
